@@ -1,16 +1,24 @@
+/**
+ * @public
+ */
 class UnFreeze {
     /**
      * @public
      * @param {Array} container
-     * @param {Function} callback Event loop callback.
-     * @param {boolean} doneOnCallback
+     * @param {Function} [callback] Event loop callback.
+     * @param {boolean} [doneOnCallback]
+     * @param {int} [intervalIterations]
      */
     constructor(container, callback, doneOnCallback = false, intervalIterations = 1) {
         this.index = 0;
         this.data = container;
-        this.eventLoop = callback;
-        this.doneOnEventLoop = doneOnCallback;
-        this.intervalIterations = intervalIterations;
+        this.eventLoop = {
+            callback: callback,
+            doneOnCallback: doneOnCallback,
+            interval: {
+                iterations: intervalIterations
+            },
+        };
     }
 
     /**
@@ -22,9 +30,9 @@ class UnFreeze {
             next: () => {
                 if (this.index < this.data.length) {
                     let done = false;
-                    if (this.index > 0 && this.index % this.intervalIterations === 0) {
-                        this.eventLoop(this);
-                        done = this.doneOnEventLoop;
+                    if (this.index > 0 && this.index % this.eventLoop.interval.iterations === 0) {
+                        this.eventLoop.callback(this);
+                        done = this.eventLoop.doneOnCallback;
                     }
                     return {value: this.data[this.index++], done: done};
                 } else {
