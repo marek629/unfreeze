@@ -1,3 +1,5 @@
+import EventLoop from "EventLoop";
+
 /**
  * @public
  */
@@ -12,13 +14,7 @@ class UnFreeze {
     constructor(container, callback, doneOnCallback = false, intervalIterations = 1) {
         this.index = 0;
         this.data = container;
-        this.eventLoop = {
-            callback: callback,
-            doneOnCallback: doneOnCallback,
-            interval: {
-                iterations: intervalIterations
-            },
-        };
+        this.eventLoop = new EventLoop(callback, doneOnCallback, intervalIterations);
     }
 
     /**
@@ -30,9 +26,9 @@ class UnFreeze {
             next: () => {
                 if (this.index < this.data.length) {
                     let done = false;
-                    if (this.index > 0 && this.index % this.eventLoop.interval.iterations === 0) {
-                        this.eventLoop.callback(this);
-                        done = this.eventLoop.doneOnCallback;
+                    if (this.eventLoop.isAllowed(this.index)) {
+                        this.eventLoop.run(this);
+                        done = this.eventLoop.done;
                     }
                     return {value: this.data[this.index++], done: done};
                 } else {
