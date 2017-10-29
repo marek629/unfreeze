@@ -1,0 +1,13 @@
+{
+  "presets": [
+    "es2015",
+    "stage-2"
+  ],
+  "plugins": [
+    "espower",
+    "transform-runtime",
+    ["babel-root-slash-import", {
+      "rootPathSuffix": "js"
+    }]
+  ]
+}
