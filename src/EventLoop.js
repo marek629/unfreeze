@@ -6,15 +6,13 @@ class EventLoop {
      * @public
      * @param {Function} [callback] Event loop callback.
      * @param {boolean} [doneOnCallback]
-     * @param {int} [intervalIterations]
+     * @param {Interval} [interval]
      */
-    constructor(callback, doneOnCallback = false, intervalIterations = 1) {
+    constructor(callback, doneOnCallback = false, interval) {
         this.data = {
             callback: callback,
             doneOnCallback: doneOnCallback,
-            interval: {
-                iterations: intervalIterations
-            },
+            interval: interval,
         };
         this._done = false;
     }
@@ -25,10 +23,10 @@ class EventLoop {
      * @returns {boolean}
      */
     isAllowed(index) {
-        if (index < 1) {
+        if (!this.data.callback || typeof this.data.callback !== 'function') {
             return false;
         }
-        return index % this.data.interval.iterations === 0;
+        return this.data.interval.isOnTarget(index);
     }
 
     /**

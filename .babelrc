@@ -6,5 +6,8 @@
   "plugins": [
     "espower",
     "transform-runtime",
+    ["babel-root-slash-import", {
+      "rootPathSuffix": "src"
+    }]
   ]
 }

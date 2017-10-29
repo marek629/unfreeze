@@ -1,20 +1,30 @@
-import EventLoop from "EventLoop";
+import EventLoop from "/EventLoop";
+import Interval from "/Interval";
+
 
 /**
  * @public
  */
 class UnFreeze {
+    static get INTERVAL_TYPE() {
+        return {
+            ITERATIONS: 1,
+            TIMEOUT: 3,
+        }
+    }
+
     /**
      * @public
      * @param {Array} container
      * @param {Function} [callback] Event loop callback.
      * @param {boolean} [doneOnCallback]
-     * @param {int} [intervalIterations]
+     * @param {int} [intervalCount]
+     * @param {int} [intervalType]
      */
-    constructor(container, callback, doneOnCallback = false, intervalIterations = 1) {
+    constructor(container, callback, doneOnCallback = false, intervalCount = 1, intervalType = UnFreeze.INTERVAL_TYPE.ITERATIONS) {
         this.index = 0;
         this.data = container;
-        this.eventLoop = new EventLoop(callback, doneOnCallback, intervalIterations);
+        this.eventLoop = new EventLoop(callback, doneOnCallback, new Interval(intervalType, intervalCount));
     }
 
     /**
